@@ -17,6 +17,7 @@ float closestC;
 String closestAbbrev;
 
 color population = color(63, 255, 230);
+color populationClear = color(63, 255, 230, 100);
 color hsGrad = color(178, 18, 172);
 color cGrad = color(255, 210, 38);
 
@@ -58,11 +59,16 @@ void draw() {
   }
 
   if (closestDist != width*height) {
-    fill(0);
+    image(mapImage, 0, 0);
     textBox(320, 120);
     float x = locationTable.getFloat(closestAbbrev, 1);
     float y = locationTable.getFloat(closestAbbrev, 2);
+    drawClearData();
     drawData(x, y, closestAbbrev);
+  }
+  else{
+    fill(0);
+    text("Mouse over a city\nfor data", 320, 120);
   }
 }
 
@@ -84,12 +90,25 @@ void drawKey(int x, int y, int step) {
 }
 
 void textBox(int x, int y){
+  fill(0);
   textSize(15);
   text(closestText, x, y);
   textSize(12);
   text("Population: " + (int)closestPop, x, y+15);
   text("High School Grads: " + closestHS + "%", x, y+30);
   text("College Grads: " + closestC + "%", x, y+45);
+}
+
+void drawClearData(){
+  fill(populationClear);
+  for (int row = 0; row < rowCount; row++) {
+    String abbrev = dataTable.getRowName(row);
+    float x = locationTable.getFloat(abbrev, 1);
+    float y = locationTable.getFloat(abbrev, 2);
+    float value = dataTable.getFloat(abbrev, 1);
+    float mapped = map(value, dataMin, dataMax, 20, 50);
+    ellipse(x, y, mapped, mapped);
+  }
 }
 
 void drawData(float x, float y, String abbrev) {
