@@ -14,10 +14,11 @@ float closestTextY;
 float closestPop;
 float closestHS;
 float closestC;
+String closestAbbrev;
 
-color population = color(192, 0, 0);
-color hsGrad = color(0, 0, 192);
-color cGrad = color(0, 255, 0);
+color population = color(63, 255, 230);
+color hsGrad = color(178, 18, 172);
+color cGrad = color(255, 210, 38);
 
 void setup() {
   size(475, 662);
@@ -58,13 +59,18 @@ void draw() {
 
   if (closestDist != width*height) {
     fill(0);
-    textBox(325, 100);
+    textBox(320, 120);
+    float x = locationTable.getFloat(closestAbbrev, 1);
+    float y = locationTable.getFloat(closestAbbrev, 2);
+    drawData(x, y, closestAbbrev);
   }
 }
 
 void drawKey(int x, int y, int step) {
   fill(0);
+  textSize(15);
   text("Legend", x, y);
+  textSize(12);
   text("Population", x+15, y+step);
   text("High School Graduates", x+15, y+step*2);
   text("College Graduates (Bachelor's Degree)", x+15, y+step*3);
@@ -78,8 +84,10 @@ void drawKey(int x, int y, int step) {
 }
 
 void textBox(int x, int y){
-  text("City: " + closestText, x, y);
-  text("Population: " + closestPop, x, y+15);
+  textSize(15);
+  text(closestText, x, y);
+  textSize(12);
+  text("Population: " + (int)closestPop, x, y+15);
   text("High School Grads: " + closestHS + "%", x, y+30);
   text("College Grads: " + closestC + "%", x, y+45);
 }
@@ -93,6 +101,7 @@ void drawData(float x, float y, String abbrev) {
 
   float d = dist(x, y, mouseX, mouseY);
   if ((d < mapped/2 + 2) && (d < closestDist)) {
+    closestAbbrev = abbrev;
     closestDist = d;
     String name = cityTable.getString(abbrev, 1);
     closestText = name;
